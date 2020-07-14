@@ -1,3 +1,6 @@
 export const config = {
-  auth: '',
+  genius_API: {
+    id: 'aaa',
+    secret: 'bbb',
+  },
 };

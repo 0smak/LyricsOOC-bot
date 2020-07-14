@@ -3,7 +3,6 @@ import {Router} from 'express';
 class IndexRoutes {
   router: Router;
   constructor() {
-    // eslint-disable-next-line new-cap
     this.router = Router();
     this.routes();
   }
