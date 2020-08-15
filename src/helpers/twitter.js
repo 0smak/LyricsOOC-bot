@@ -22,7 +22,7 @@ const start = async () => {
 const mentionsStream = () => {
     console.log('[mentionStream] started');
     
-    const stream = twit.stream('statuses/filter', { track: ['@LyricsOOCbot -RT'] })
+    const stream = twit.stream('statuses/filter', { track: ['@LyricsOOCbot -RT -from:@LyricsOOCbot'] })
     stream.on('tweet', function (tweet) {
         console.log('Got tweet: ' + tweet.text)
         if(tweet.user.id != config.twitter_API.userId) {
