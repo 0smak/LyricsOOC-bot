@@ -6,7 +6,7 @@ const fs = require('fs');
 const Twit = require('twit');
 
 
-const twit = await new Twit({
+const twit = new Twit({
     consumer_key: config.twitter_API.api_key,
     consumer_secret: config.twitter_API.api_key_secret,
     access_token: config.twitter_API.access_token,
