@@ -1,5 +1,4 @@
-export const template = {
-    html: (img: string, name: string, artists: string, lyric: string) => `
+const html = (img, name, artists, lyric) => `
     <div class="container">
         <div class="bg"></div>
         <div class="left">
@@ -17,10 +16,10 @@ export const template = {
             <div class="lyrics"><p>${lyric}</p></div>
         </div>
     </div>
-    `,
-    css: (img: string) => {
-        return {
-            content: `
+    `;
+const css = img => {
+  return {
+    content: `
             @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
 
             * {
@@ -43,12 +42,12 @@ export const template = {
             background: url(${img});
             background-size: cover;
             background-position: center center;
-            filter: blur(5px);
+            filter: blur(30px);
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
-            transform: scale(1.02);
+            transform: scale(1.2);
             }
             
             .right {
@@ -116,8 +115,11 @@ export const template = {
             display: flex;
             flex-direction: column-reverse;
             }      
-        ` 
- 
-        }
-    }
+        `
+
+  }
 }
+module.exports = {
+  html,
+  css
+};
