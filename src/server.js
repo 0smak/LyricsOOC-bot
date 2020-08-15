@@ -43,7 +43,6 @@ const createMedia = async (text, reply = undefined) => {
 
 
 const postRandom = async () => {
-    await delay(1800000);
     const imageData = await lyricsUtil.createImage(undefined, artists.getRandomArtist());
     if (imageData != null) {
         postMedia(imageData.filename, imageData.name, imageData.artists);
