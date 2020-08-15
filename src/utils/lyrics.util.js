@@ -39,7 +39,12 @@ const isValidLine = lyric => {
 const generateImage = async(img, name, artists, lyric) => {
   const filename = `./img/${name} ${artists} ${new Date().getTime()}.png`.replace(/\s+/g, '-');
   let buffer = await(async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      'args' : [
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
+      ]
+    });
     const page = await browser.newPage();
     const html = template.html(img, name, artists, lyric);
     const css = template.css(img);
