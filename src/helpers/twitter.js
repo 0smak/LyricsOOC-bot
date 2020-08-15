@@ -14,9 +14,10 @@ const start = async () => {
         access_token: config.twitter_API.access_token,
         access_token_secret: config.twitter_API.access_token_secret
     });
-    console.log(twit)
     mentionsStream();
-    postRandom();
+    setInterval(() => {
+        postRandom();
+    }, 1800000);
 }
 
 const mentionsStream = () => {
@@ -47,7 +48,6 @@ const postRandom = async () => {
     if (imageData != null) {
         postMedia(imageData.filename, imageData.name, imageData.artists);
     }
-    postRandom();
 }
 
 const delay = ms => new Promise(r => setTimeout(r, ms));
@@ -62,10 +62,6 @@ const postMedia = (filename, name, artists, reply) => {
         const meta_params = { media_id: mediaIdStr }
         twit.post('media/metadata/create', meta_params, function (err, data, response) {
             fs.unlinkSync(filename);
-            if (data) {
-                console.log('set metadata');
-                console.log('data: ')
-            }
             if (!err) {
                 let params = { status: `${name} by ${artists}`, media_ids: [mediaIdStr]};
                 if (reply != undefined) {
