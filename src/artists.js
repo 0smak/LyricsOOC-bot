@@ -14,7 +14,10 @@ const id = [
     1442194, // Papi Trujillo
     1338048, // MC Buzzz
     615608, // Israel B
-    585297 // Cecilio G
+    585297, // Cecilio G
+    1091094, // Space Surimi
+    1239974 // Scarface Johannson
+    
 ];
 
 const getRandomArtist = () => id[Math.floor(Math.random() * id.length)]

@@ -21,7 +21,7 @@ const twit = new Twit({
 setInterval(() => {
   console.log('Posting random');
   postRandom();
-}, 600000);
+}, 900000);
 
 const stream = twit.stream('statuses/filter', { track: '@LyricsOOCbot -RT -from:@LyricsOOCbot' })
 stream.on('tweet', function (tweet) {
@@ -48,9 +48,6 @@ const postRandom = async () => {
         postMedia(imageData.filename, imageData.name, imageData.artists);
     }
 }
-
-const delay = ms => new Promise(r => setTimeout(r, ms));
-
 
 const postMedia = (filename, name, artists, reply) => {
     twit.postMediaChunked({ file_path: filename }, function (err, data, response) {
