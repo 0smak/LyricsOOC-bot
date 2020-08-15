@@ -5,16 +5,18 @@ const GeniusService = require('../services/genius.service');
 const fs = require('fs');
 const Twit = require('twit');
 
-const twit = new Twit({
-    consumer_key: config.twitter_API.api_key,
-    consumer_secret: config.twitter_API.api_key_secret,
-    access_token: config.twitter_API.access_token,
-    access_token_secret: config.twitter_API.access_token_secret
-});
+let twit;
 
-const start = () => {
+const start = async () => {
+    twit = await new Twit({
+        consumer_key: config.twitter_API.api_key,
+        consumer_secret: config.twitter_API.api_key_secret,
+        access_token: config.twitter_API.access_token,
+        access_token_secret: config.twitter_API.access_token_secret
+    });
+    console.log(twit)
     mentionsStream();
-    //postRandom();
+    postRandom();
 }
 
 const mentionsStream = () => {
@@ -26,16 +28,16 @@ const mentionsStream = () => {
         console.log(tweet);
         if(tweet.user.id != config.twitter_API.userId) {
             const text = tweet.text.replace(/@LyricsOOCbot/g, '');
-            createMedia(text, tweet.id_str);
+            createMedia(text, {tweetId: tweet.id_str, user: `@${tweet.user.screen_name}`});
         }
     });
 }
 
-const createMedia = async (text, userId = -1) => {
+const createMedia = async (text, reply = undefined) => {
     console.log('[createMedia] ' + text)
     const imageData = await lyricsUtil.createImage(text);
     if (imageData != null) {
-        postMedia(imageData.filename, imageData.name, imageData.artists, userId);
+        postMedia(imageData.filename, imageData.name, imageData.artists, reply);
     }
 }
 
@@ -52,7 +54,7 @@ const postRandom = async () => {
 const delay = ms => new Promise(r => setTimeout(r, ms));
 
 
-const postMedia = (filename, name, artists, userId) => {
+const postMedia = (filename, name, artists, reply) => {
     twit.postMediaChunked({ file_path: filename }, function (err, data, response) {
         if (data) {
             console.log('Media uploaded')
@@ -67,9 +69,11 @@ const postMedia = (filename, name, artists, userId) => {
             }
             if (!err) {
                 let params = { status: `${name} by ${artists}`, media_ids: [mediaIdStr]};
-                if (userId > 0) {
-                    params = {...params,  in_reply_to_status_id: userId};  
+                if (reply != undefined) {
+                    params = {...params,  in_reply_to_status_id: reply.tweetId};
+                    params.status = `${reply.user} ${params.status}`  
                 }
+                console.log(params)
                 twit.post('statuses/update', params, function (err, data, response) {
                     console.log('tweet posted!');
                 })

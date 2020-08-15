@@ -65,13 +65,15 @@ const getSongData = async (q) => {
 
     if (found) hit = hits[i];
   }
-  const id = hit.result.id;
-  const name = hit.result.title;
-  let artists = hit.result.primary_artist.name;
-  const feat = hit.result.full_title.match(/\(\bFt\b\..*?\)/gi);
-  artists = feat ? artists + ' ' + feat[0] : artists;
-  const img = hit.result.header_image_url;
-  return { id, name, artists, img };
+  if(found) {
+    const id = hit.result.id;
+    const name = hit.result.title;
+    let artists = hit.result.primary_artist.name;
+    const feat = hit.result.full_title.match(/\(\bFt\b\..*?\)/gi);
+    artists = feat ? artists + ' ' + feat[0] : artists;
+    const img = hit.result.header_image_url;
+    return { id, name, artists, img };
+  }
 }
 
 const getSongFromArtist = async (idArtist) => {
