@@ -22,10 +22,9 @@ const start = async () => {
 const mentionsStream = () => {
     console.log('[mentionStream] started');
     
-    const stream = twit.stream('statuses/filter', { track: ['@LyricsOOCbot', 'LyricsOOCbot'] })
+    const stream = twit.stream('statuses/filter', { track: ['@LyricsOOCbot -RT'] })
     stream.on('tweet', function (tweet) {
         console.log('Got tweet: ' + tweet.text)
-        console.log(tweet);
         if(tweet.user.id != config.twitter_API.userId) {
             const text = tweet.text.replace(/@LyricsOOCbot/g, '');
             createMedia(text, {tweetId: tweet.id_str, user: `@${tweet.user.screen_name}`});
@@ -43,11 +42,11 @@ const createMedia = async (text, reply = undefined) => {
 
 
 const postRandom = async () => {
+    await delay(1800000);
     const imageData = await lyricsUtil.createImage(undefined, artists.getRandomArtist());
     if (imageData != null) {
         postMedia(imageData.filename, imageData.name, imageData.artists);
     }
-    await delay(1800000);
     postRandom();
 }
 
