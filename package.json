@@ -1,0 +1,29 @@
+{
+  "name": "lyricsooc-bot",
+  "version": "1.0.0",
+  "description": "API that create a image with random lyrics of a song using Genius API",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "lyricist": "^2.2.2",
+    "puppeteer": "^5.1.0",
+    "puppeteer-core": "^5.1.0",
+    "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.11.0",
+    "nodemon": "^2.0.4",
+    "prettier-eslint": "^11.0.0"
+  }
+}
