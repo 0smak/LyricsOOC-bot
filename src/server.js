@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express');
-const config = require('../config');
-const artists = require('../artists');
-const lyricsUtil = require('../utils/lyrics.util');
+const config = require('./config');
+const artists = require('./artists');
+const lyricsUtil = require('./utils/lyrics.util');
 const fs = require('fs');
 const Twit = require('twit');
 const app = express();
