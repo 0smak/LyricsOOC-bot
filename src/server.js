@@ -3,14 +3,13 @@ const express = require('express');
 const config = require('./config');
 const artists = require('./artists');
 const lyricsUtil = require('./utils/lyrics.util');
-const fs = require('fs');
+const fs = require('fs'); 
 const Twit = require('twit');
 const app = express();
 
 app.listen(process.env.PORT || 8080);
 console.log('Server started')
 
-start();
 
 const twit = new Twit({
     consumer_key: config.twitter_API.api_key,
