@@ -3,7 +3,7 @@ const express = require('express');
 const config = require('./config');
 const artists = require('./artists');
 const lyricsUtil = require('./utils/lyrics.util');
-const fs = require('fs'); 
+const fs = require('fs');
 const Twit = require('twit');
 const app = express();
 
@@ -19,18 +19,40 @@ const twit = new Twit({
 });
 
 setInterval(() => {
-  console.log('Posting random');
-  postRandom();
+    console.log('Posting random');
+    postRandom();
 }, 600000);
 
-const stream = twit.stream('statuses/filter', { track: '@LyricsOOCbot -RT -from:@LyricsOOCbot' })
-stream.on('tweet', function (tweet) {
-    console.log('Got tweet: ' + tweet.text)
-    if(tweet.user.id != config.twitter_API.userId) {
-        const text = tweet.text.replace(/@LyricsOOCbot/g, '');
-        createMedia(text, {tweetId: tweet.id_str, user: `@${tweet.user.screen_name}`});
-    }
-});
+
+
+
+const getPostedTweets = () => {
+    return (fs.readFileSync("tweets.data").toString('utf-8')).split(',').filter(el => el != '');
+};
+
+const writeIdTweet = async id => {
+    const append = `,${id}`
+    fs.appendFile('tweets.data', append, err => {
+        if (err) throw err;
+    });
+};
+
+setInterval(() => {
+    twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 10 }, function (err, data, response) {
+        data.statuses.forEach(el => {
+            if(!getPostedTweets().includes(el.id_str)) {
+                writeIdTweet(el.id_str);
+                console.log('Got tweet: ' + el.text)
+                if(el.user.id != config.twitter_API.userId) {
+                    const text = el.text.replace(/@LyricsOOCbot/g, '');
+                    createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
+                }
+            }
+        });
+    })
+}, 240000);
+
+
 
 
 const createMedia = async (text, reply = undefined) => {
@@ -62,10 +84,10 @@ const postMedia = (filename, name, artists, reply) => {
         twit.post('media/metadata/create', meta_params, function (err, data, response) {
             fs.unlinkSync(filename);
             if (!err) {
-                let params = { status: `${name} by ${artists}`, media_ids: [mediaIdStr]};
+                let params = { status: `${name} by ${artists}`, media_ids: [mediaIdStr] };
                 if (reply != undefined) {
-                    params = {...params,  in_reply_to_status_id: reply.tweetId};
-                    params.status = `${reply.user} ${params.status}`  
+                    params = { ...params, in_reply_to_status_id: reply.tweetId };
+                    params.status = `${reply.user} ${params.status}`
                 }
                 console.log(params)
                 twit.post('statuses/update', params, function (err, data, response) {
