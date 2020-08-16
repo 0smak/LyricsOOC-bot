@@ -99,7 +99,7 @@ const createImage = async (q = undefined, idArtist = -1) => {
     const lyric = await(getValidLyric(id))
     if(idArtist != -1 && lyric.includes('Lyrics for this song have yet')) {
       return createImage(q, idArtist);
-    }  else if (idArtist==-1) return null;
+    }  else if (idArtist==-1 && lyric.includes('Lyrics for this song have yet')) return null;
     let filename = await generateImage(img, name, artists, lyric)
       .then(f => f);
     return { filename, name, artists };
