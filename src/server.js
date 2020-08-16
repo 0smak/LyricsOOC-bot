@@ -18,13 +18,6 @@ const twit = new Twit({
     access_token_secret: config.twitter_API.access_token_secret
 });
 
-setInterval(() => {
-    console.log('Posting random');
-    postRandom();
-}, 600000);
-
-
-
 
 const getPostedTweets = () => {
     return (fs.readFileSync("tweets.data").toString('utf-8')).split(',').filter(el => el != '');
@@ -37,7 +30,7 @@ const writeIdTweet = async id => {
     });
 };
 
-setInterval(() => {
+const fetchTweet = () => {
     twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 20, result_type: 'recent' }, function (err, data, response) {
         if(data && !err && data.statuses) {
             console.log(data.statuses.length);
@@ -47,20 +40,19 @@ setInterval(() => {
                     console.log('Got tweet: ' + el.text)
                     if(el.user.id != config.twitter_API.userId) {
                         const text = el.text.replace(/@LyricsOOCbot/g, '');
-                        createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
+                       // createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
                     }
                 } else {
                     console.log('invalid tweet: ['+el.id_str+'] ['+el.text+']');
                 }
             }
         } else {
+            if(data) console.log(data);
+            if(err) console.log(err);
             console.error('err: data invalid')
         }
-    })
-}, 90000);
-
-
-
+    });
+};
 
 const createMedia = async (text, reply = undefined) => {
     console.log('[createMedia] ' + text)
@@ -77,9 +69,6 @@ const postRandom = async () => {
         postMedia(imageData.filename, imageData.name, imageData.artists);
     }
 }
-
-const delay = ms => new Promise(r => setTimeout(r, ms));
-
 
 const postMedia = (filename, name, artists, reply) => {
     twit.postMediaChunked({ file_path: filename }, function (err, data, response) {
@@ -104,3 +93,14 @@ const postMedia = (filename, name, artists, reply) => {
         })
     })
 }
+
+fetchTweet();
+setInterval(() => {
+    fetchTweet();
+}, 90000);
+
+setInterval(() => {
+    console.log('Posting random');
+    postRandom();
+}, 600000);
+
