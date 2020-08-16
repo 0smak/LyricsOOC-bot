@@ -6,6 +6,13 @@ const lyricsUtil = require('./utils/lyrics.util');
 const fs = require('fs');
 const Twit = require('twit');
 const app = express();
+var params = { Bucket: 'lyricsooc', Key: 'tweets.data' }
+const AWS = require('aws-sdk');
+
+const s3 = new AWS.S3({
+    accessKeyId: config.AWS_KEYS.access_key_id,
+    secretAccessKey: config.AWS_KEYS.secret_access_key
+});
 
 app.listen(process.env.PORT || 8080);
 console.log('Server started')
@@ -18,6 +25,9 @@ const twit = new Twit({
     access_token_secret: config.twitter_API.access_token_secret
 });
 
+const getFile = async () => {
+
+}
 
 const getPostedTweets = () => {
     return (fs.readFileSync("tweets.data").toString('utf-8')).split(',').filter(el => el != '');
@@ -25,30 +35,54 @@ const getPostedTweets = () => {
 
 const writeIdTweet = async id => {
     const append = `,${id}`
-    fs.appendFile('tweets.data', append, err => {
+    fs.writeFile('tweets.data', append, err => {
         if (err) throw err;
+    });
+};
+
+const uploadFile = async id => {
+    let ids = await getFile();
+    s3.getObject(params, (err, data) => {
+        ids = data.Body.toString('utf-8');
+        ids += `,${id}`;
+        const file = Buffer.from(ids);
+        // Setting up S3 upload parameters
+        const params = {
+            Bucket: config.AWS_KEYS.bucket,
+            Key: 'tweets.data', // File name you want to save as in S3
+            Body: file
+        };
+
+        // Uploading files to the bucket
+        writeIdTweet(ids);
+        s3.upload(params, function (err, data) {
+            if (err) {
+                throw err;
+            }
+            console.log(`File uploaded successfully. ${data.Location}`);
+        });
     });
 };
 
 const fetchTweet = () => {
     twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 20, result_type: 'recent' }, function (err, data, response) {
-        if(data && !err && data.statuses) {
+        if (data && !err && data.statuses) {
             console.log(data.statuses.length);
-            for(let el of data.statuses) {
-                if(!getPostedTweets().includes(el.id_str)) {
-                    writeIdTweet(el.id_str);
+            for (let el of data.statuses) {
+                if (!getPostedTweets().includes(el.id_str)) {
+                    uploadFile(el.id_str);
                     console.log('Got tweet: ' + el.text)
-                    if(el.user.id != config.twitter_API.userId) {
+                    if (el.user.id != config.twitter_API.userId) {
                         const text = el.text.replace(/@LyricsOOCbot/g, '');
                         createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
                     }
                 } else {
-                    console.log('invalid tweet: ['+el.id_str+'] ['+el.text+']');
+                    console.log('invalid tweet: [' + el.id_str + '] [' + el.text + ']');
                 }
             }
         } else {
-            if(data) console.log(data);
-            if(err) console.log(err);
+            if (data) console.log(data);
+            if (err) console.log(err);
             console.error('err: data invalid')
         }
     });
@@ -93,6 +127,7 @@ const postMedia = (filename, name, artists, reply) => {
         })
     })
 }
+
 
 fetchTweet();
 setInterval(() => {
