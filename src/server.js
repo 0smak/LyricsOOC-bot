@@ -15,6 +15,7 @@ const s3 = new AWS.S3({
     secretAccessKey: config.AWS_KEYS.secret_access_key
 });
 
+
 router.get('/', function (req, res) {
     res.status(200).send('hola mundo')
 });
@@ -69,6 +70,7 @@ const uploadFile = async id => {
         });
     });
 };
+uploadFile('');
 
 const fetchTweet = () => {
     twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 20, result_type: 'recent' }, function (err, data, response) {
@@ -134,8 +136,10 @@ const postMedia = (filename, name, artists, reply) => {
     })
 }
 
+setTimeout(() => {
+    fetchTweet();
+}, 2000);
 
-fetchTweet();
 setInterval(() => {
     fetchTweet();
 }, 90000);
