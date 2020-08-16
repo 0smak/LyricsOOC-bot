@@ -28,7 +28,19 @@ const id = [
     673865, // Bad Gyal
     56991, // C. Tangana
     624481, // Anuel AA
-    
+    690350, // Bad Bunny
+    223925, // J Balvin
+    582612, // Cruz Cafuné
+    207701, // Myke Towers
+    452856, // El Alfa
+    166709, // Quimico Ultra Mega
+    1554904, // El Virtual
+    654902, // LMDA
+    247015, // Sticky MA
+    1851263, // L'haine
+    1835333, // Chico Blanco
+    269600, // Darell
+    1202698, // Sech
 
 ];
 
