@@ -40,7 +40,7 @@ const fetchTweet = () => {
                     console.log('Got tweet: ' + el.text)
                     if(el.user.id != config.twitter_API.userId) {
                         const text = el.text.replace(/@LyricsOOCbot/g, '');
-                       // createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
+                        createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
                     }
                 } else {
                     console.log('invalid tweet: ['+el.id_str+'] ['+el.text+']');
