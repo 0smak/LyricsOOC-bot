@@ -137,6 +137,7 @@ const postMedia = (filename, name, artists, reply) => {
 
 setTimeout(() => {
     fetchTweet();
+    postRandom();
 }, 2000);
 
 setInterval(() => {
@@ -146,5 +147,5 @@ setInterval(() => {
 setInterval(() => {
     console.log('Posting random');
     postRandom();
-}, 600000);
+}, 2700000);
 
