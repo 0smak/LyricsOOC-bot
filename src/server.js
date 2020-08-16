@@ -38,7 +38,7 @@ const writeIdTweet = async id => {
 };
 
 setInterval(() => {
-    twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 10 }, function (err, data, response) {
+    twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 20, result_type: 'recent' }, function (err, data, response) {
         if(data && !err )
             for(let el of data.statuses) {
                 if(!getPostedTweets().includes(el.id_str)) {
@@ -51,7 +51,7 @@ setInterval(() => {
                 }
             }
     })
-}, 120000);
+}, 90000);
 
 
 
