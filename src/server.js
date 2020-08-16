@@ -39,18 +39,19 @@ const writeIdTweet = async id => {
 
 setInterval(() => {
     twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 10 }, function (err, data, response) {
-        data.statuses.forEach(el => {
-            if(!getPostedTweets().includes(el.id_str)) {
-                writeIdTweet(el.id_str);
-                console.log('Got tweet: ' + el.text)
-                if(el.user.id != config.twitter_API.userId) {
-                    const text = el.text.replace(/@LyricsOOCbot/g, '');
-                    createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
+        if(data && !err )
+            for(let el of data.statuses) {
+                if(!getPostedTweets().includes(el.id_str)) {
+                    writeIdTweet(el.id_str);
+                    console.log('Got tweet: ' + el.text)
+                    if(el.user.id != config.twitter_API.userId) {
+                        const text = el.text.replace(/@LyricsOOCbot/g, '');
+                        createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
+                    }
                 }
             }
-        });
     })
-}, 240000);
+}, 120000);
 
 
 
