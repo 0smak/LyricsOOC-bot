@@ -8,14 +8,20 @@ const Twit = require('twit');
 const app = express();
 var params = { Bucket: 'lyricsooc', Key: 'tweets.data' }
 const AWS = require('aws-sdk');
+const router = express.Router();
 
 const s3 = new AWS.S3({
     accessKeyId: config.AWS_KEYS.access_key_id,
     secretAccessKey: config.AWS_KEYS.secret_access_key
 });
 
-app.listen(process.env.PORT || 8080);
-console.log('Server started')
+router.get('/', function (req, res) {
+    res.status(200).send('hola mundo')
+});
+app.use('/', router);
+app.listen((process.env.PORT || 8080), () => {
+    console.log(`Servidor iniciado en https://lyrics-ooc.herokuapp.com:${(process.env.PORT || 8080)}`)
+});
 
 
 const twit = new Twit({
@@ -74,7 +80,7 @@ const fetchTweet = () => {
                     console.log('Got tweet: ' + el.text)
                     if (el.user.id != config.twitter_API.userId) {
                         const text = el.text.replace(/@LyricsOOCbot/g, '');
-                        createMedia(text, {tweetId: el.id_str, user: `@${el.user.screen_name}`});
+                        createMedia(text, { tweetId: el.id_str, user: `@${el.user.screen_name}` });
                     }
                 } else {
                     console.log('invalid tweet: [' + el.id_str + '] [' + el.text + ']');
