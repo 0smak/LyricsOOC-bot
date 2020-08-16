@@ -42,15 +42,14 @@ const getPostedTweets = () => {
 
 const writeIdTweet = async id => {
     const append = `,${id}`
-    fs.writeFile('tweets.data', append, err => {
+    await fs.writeFile('tweets.data', append, err => {
         if (err) throw err;
     });
 };
 
 const uploadFile = async id => {
-    let ids = await getFile();
-    s3.getObject(params, (err, data) => {
-        ids = data.Body.toString('utf-8');
+    await s3.getObject(params, async (err, data) => {
+        let ids = data.Body.toString('utf-8');
         ids += `,${id}`;
         const file = Buffer.from(ids);
         // Setting up S3 upload parameters
@@ -61,8 +60,8 @@ const uploadFile = async id => {
         };
 
         // Uploading files to the bucket
-        writeIdTweet(ids);
-        s3.upload(params, function (err, data) {
+        await writeIdTweet(ids);
+        await s3.upload(params, function (err, data) {
             if (err) {
                 throw err;
             }
@@ -73,16 +72,16 @@ const uploadFile = async id => {
 uploadFile('');
 
 const fetchTweet = () => {
-    twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 20, result_type: 'recent' }, function (err, data, response) {
+    twit.get('search/tweets', { q: '@LyricsOOCbot -from:@LyricsOOCbot -RT', count: 5, result_type: 'recent' }, async function (err, data, response) {
         if (data && !err && data.statuses) {
             console.log(data.statuses.length);
             for (let el of data.statuses) {
                 if (!getPostedTweets().includes(el.id_str)) {
-                    uploadFile(el.id_str);
+                    await uploadFile(el.id_str);
                     console.log('Got tweet: ' + el.text)
                     if (el.user.id != config.twitter_API.userId) {
-                        const text = el.text.replace(/@LyricsOOCbot/g, '');
-                        createMedia(text, { tweetId: el.id_str, user: `@${el.user.screen_name}` });
+                        const text = el.text.replace(/@LyricsOOCbot/g, '').replace(/@/g,'');
+                        await createMedia(text, { tweetId: el.id_str, user: `@${el.user.screen_name}` });
                     }
                 } else {
                     console.log('invalid tweet: [' + el.id_str + '] [' + el.text + ']');
