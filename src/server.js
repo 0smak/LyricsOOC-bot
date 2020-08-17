@@ -81,7 +81,7 @@ const fetchTweet = () => {
                     console.log('Got tweet: ' + el.text)
                     if (el.user.id != config.twitter_API.userId) {
                         const text = el.text.replace(/@LyricsOOCbot/g, '').replace(/@/g,'');
-                        await createMedia(text, { tweetId: el.id_str, user: `@${el.user.screen_name}` });
+                        await createMedia(text, { tweetId: el.id, user: `@${el.user.screen_name}`, tweetIdStr: el.id_str });
                     }
                 } else {
                     console.log('invalid tweet: [' + el.id_str + '] [' + el.text + ']');
@@ -123,7 +123,7 @@ const postMedia = (filename, name, artists, reply) => {
             if (!err) {
                 let params = { status: `${name} by ${artists}`, media_ids: [mediaIdStr] };
                 if (reply != undefined) {
-                    params = { ...params, in_reply_to_status_id: reply.tweetId };
+                    params = { ...params, in_reply_to_status_id: reply.tweetIdStr,  in_reply_to_status_id_str: reply.tweetIdStr };
                     params.status = `${reply.user} ${params.status}`
                 }
                 console.log(params)
@@ -134,6 +134,8 @@ const postMedia = (filename, name, artists, reply) => {
         })
     })
 }
+
+
 
 setTimeout(() => {
     fetchTweet();
