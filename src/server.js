@@ -144,7 +144,7 @@ setTimeout(() => {
 
 setInterval(() => {
     fetchTweet();
-}, 90000);
+}, 30000);
 
 setInterval(() => {
     console.log('Posting random');

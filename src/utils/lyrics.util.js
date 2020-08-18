@@ -40,7 +40,7 @@ const isValidLine = lyric => {
 
 const generateImage = async(img, name, artists, lyric) => {
   const filename = `./img/${name} ${artists} ${new Date().getTime()}.png`.replace(/\s+/g, '-');
-  let buffer = await(async () => {
+  const image = await(async () => {
     const browser = await puppeteer.launch({
       'args' : [
         '--no-sandbox',
@@ -66,8 +66,8 @@ const getSongData = async (q) => {
   let found = false;
   for (let i = 0; i < hits.length && !found; i++) {
     found =
-      ['favorites', 'favoritos', 'ranking'].find((w) =>
-        hits[i].result.full_title.includes(w)
+      ['favorites', 'favoritos', 'ranking', 'tracklist', 'best album', 'best song'].find((w) =>
+        hits[i].result.full_title.toLowerCase().includes(w)
       ) === undefined;
 
     if (found) hit = hits[i];
