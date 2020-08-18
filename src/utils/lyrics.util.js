@@ -62,6 +62,7 @@ const generateImage = async(img, name, artists, lyric) => {
 const getSongData = async (q) => {
   const { data } = await geniusService.search(q);
   const hits = data.response.hits;
+  if(hits.length > 0) console.log('FOUND LYRICS')
   let hit;
   let found = false;
   for (let i = 0; i < hits.length && !found; i++) {
@@ -71,6 +72,7 @@ const getSongData = async (q) => {
       ) === undefined;
 
     if (found) hit = hits[i];
+    else console.log('not valid lyrics were found')
   }
   if(found) {
     const id = hit.result.id;
@@ -79,6 +81,7 @@ const getSongData = async (q) => {
     const feat = hit.result.full_title.match(/\(\bFt\b\..*?\)/gi);
     artists = feat ? artists + ' ' + feat[0] : artists;
     const img = hit.result.header_image_url;
+    console.log(`${name} by ${artists}`)
     return { id, name, artists, img };
   } else return {id: 'null',name: 'null',artists: 'null',img: 'null'}
 }
