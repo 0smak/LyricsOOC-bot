@@ -12,8 +12,15 @@ const twitter_API = {
   access_token_secret: 'eee'
 }
 
+const AWS_KEYS = {
+  access_key_id: 'aaa',
+  secret_access_key: 'bbb',
+  bucket: 'your-bucket-name'
+};
+
 
 module.exports = {
   genius_API,
-  twitter_API
+  twitter_API,
+  AWS_KEYS
 };
