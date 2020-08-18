@@ -8,6 +8,8 @@ const getValidLyric = async id => {
   let attempts = 0;
   while (lyrics.length === 0 && attempts < 10) {
     lyrics = await geniusService.getLyrics(id);
+    
+
     lyric = getLine(lyrics);
     attempts++;
   }
@@ -38,7 +40,7 @@ const isValidLine = lyric => {
 
 const generateImage = async(img, name, artists, lyric) => {
   const filename = `./img/${name} ${artists} ${new Date().getTime()}.png`.replace(/\s+/g, '-');
-  let buffer = await(async () => {
+  const image = await(async () => {
     const browser = await puppeteer.launch({
       'args' : [
         '--no-sandbox',
@@ -64,8 +66,8 @@ const getSongData = async (q) => {
   let found = false;
   for (let i = 0; i < hits.length && !found; i++) {
     found =
-      ['favorites', 'favoritos', 'ranking'].find((w) =>
-        hits[i].result.full_title.includes(w)
+      ['favorites', 'favoritos', 'ranking', 'tracklist', 'best album', 'best song'].find((w) =>
+        hits[i].result.full_title.toLowerCase().includes(w)
       ) === undefined;
 
     if (found) hit = hits[i];
@@ -78,7 +80,7 @@ const getSongData = async (q) => {
     artists = feat ? artists + ' ' + feat[0] : artists;
     const img = hit.result.header_image_url;
     return { id, name, artists, img };
-  }
+  } else return {id: 'null',name: 'null',artists: 'null',img: 'null'}
 }
 
 const getSongFromArtist = async (idArtist) => {
@@ -93,8 +95,11 @@ const createImage = async (q = undefined, idArtist = -1) => {
     const { id, name, artists, img } = q ?
       await getSongData(q).then(obj => obj)
       : await getSongFromArtist(idArtist);
-
+    if(id == "null") return null;
     const lyric = await(getValidLyric(id))
+    if(idArtist != -1 && lyric.includes('Lyrics for this song have yet')) {
+      return createImage(q, idArtist);
+    }  else if (idArtist==-1 && lyric.includes('Lyrics for this song have yet')) return null;
     let filename = await generateImage(img, name, artists, lyric)
       .then(f => f);
     return { filename, name, artists };
