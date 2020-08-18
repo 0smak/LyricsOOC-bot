@@ -80,7 +80,10 @@ const fetchTweet = () => {
                     await uploadFile(el.id_str);
                     console.log('Got tweet: ' + el.text)
                     if (el.user.id != config.twitter_API.userId) {
-                        const text = el.text.replace(/@LyricsOOCbot/g, '').replace(/@/g,'');
+                        const text = el.text
+                            .replace(/@LyricsOOCbot/g, '')
+                            .replace(/(@\S+)/gi,'')
+                            .replace(/ +(?= )/g,'');
                         await createMedia(text, { tweetId: el.id, user: `@${el.user.screen_name}`, tweetIdStr: el.id_str });
                     }
                 } else {
