@@ -48,8 +48,8 @@ async function generateImage(img, name, artists, lyric) {
   const filename = `/tmp/${name} ${artists} ${new Date().getTime()}.png`.replace(/\s+/g, '-');
   return await (async function () {
     const defaultViewport = {
-      width: 1200,
-      height: 625
+      width: 512,
+      height: 1024
     };
     const browser = await chromeLambda.puppeteer.launch({
       args: chromeLambda.args,
