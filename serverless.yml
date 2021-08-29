@@ -1,15 +1,15 @@
 service: lyricsooc-bot
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
 functions:
   fetch:
-    timeout: 12
+    timeout: 20
     handler: handler.fetchTweets
     events:
       - schedule: rate(1 minute)
   postRandom:
-    timeout: 12
+    timeout: 20
     handler: handler.postRandom
     events:
       - schedule: rate(60 minutes)

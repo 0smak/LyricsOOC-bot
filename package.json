@@ -1,27 +1,27 @@
 {
-	"name": "lyricsooc-bot",
-	"version": "1.0.0",
-	"description": "API that create a image with random lyrics of a song using Genius API",
-	"main": "./handler.js",
-	"scripts": {
-		"start": "node .",
-		"dev": "nodemon ."
-	},
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"aws-sdk": "^2.734.0",
-		"axios": "^0.19.2",
-		"chrome-aws-lambda": "^5.3.0",
-		"lyricist": "^2.2.2",
-		"puppeteer-core": "^5.1.0",
-		"twit": "^2.2.11"
-	},
-	"devDependencies": {
-		"eslint": "^7.4.0",
-		"eslint-config-google": "^0.14.0",
-		"eslint-config-prettier": "^6.11.0",
-		"nodemon": "^2.0.4",
-		"prettier-eslint": "^11.0.0"
-	}
+  "name": "lyricsooc-bot",
+  "version": "1.0.0",
+  "description": "API that create a image with random lyrics of a song using Genius API",
+  "main": "./handler.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.734.0",
+    "axios": "^0.19.2",
+    "chrome-aws-lambda": "^10.1.0",
+    "genius-lyrics": "^4.2.9",
+    "puppeteer-core": "^10.2.0",
+    "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.11.0",
+    "nodemon": "^2.0.4",
+    "prettier-eslint": "^11.0.0"
+  }
 }

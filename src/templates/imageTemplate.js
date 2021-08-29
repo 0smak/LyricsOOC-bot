@@ -8,12 +8,13 @@ const html = (img, name, artists, lyric) => `
         />
       </div>
       <div class="text">
+        <div class="lyrics">
+          <span class="quote">"</span>
+          <p>${lyric}</p>
+        </div>
         <div class="credits">
           <div class="name">${name}</div>
           <div class="artists">${artists}</div>
-        </div>
-        <div class="lyrics">
-          <p>${lyric}</p>
         </div>
       </div>
       <div class="copy">@LyricsOOCBot</div>
@@ -23,9 +24,17 @@ const css = img => {
   return {
     content: `
     @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@700&display=swap');
+    
     * {
       font-family: 'Source Sans Pro', sans-serif;
+    }
+    
+    span.quote {
+      font-family: 'Passion One', cursive;
+      font-size: 72px;
+      transform: translateY(35px);
+      color: #fff000;
     }
     body {
       margin: 0;
@@ -37,7 +46,7 @@ const css = img => {
       position: relative;
       overflow: hidden;
       grid-gap: 50px;
-      padding-top: 100px;
+      padding-top: 50px;
     }
     
     .container,
@@ -95,12 +104,12 @@ const css = img => {
     }
     
     .name {
-      font-size: 36px;
+      font-size: 28px;
       font-weight: bold;
       text-shadow: 0 5px 12px #00000040;
     }
     .artists {
-      font-size: 24px;
+      font-size: 16px;
       opacity: 0.75;
       text-shadow: 0 5px 12px #00000040;
     }
@@ -110,17 +119,19 @@ const css = img => {
       padding: 0 !important;
       margin-right: 0 !important;
       display: flex;
-      font-size: 36px;
+      font-size: 28px;
       font-weight: 400;
       text-shadow: 0 5px 10px #00000070;
       font-style: italic;
     }
     
     .lyrics {
+      transform: translateY(-35px);
       display: flex;
       justify-content: center;
       flex-direction: column;
       width: calc(512px - 90px);
+      margin-bottom: 50px;
     }
     
     .credits {
@@ -130,7 +141,9 @@ const css = img => {
       width: calc(512px - 90px);
       padding: 0 45px;
       height: min-content;
-      margin-bottom: 50px;
+      align-items: center;
+      position: absolute;
+      bottom: 100px;
     }
     
     .copy {
@@ -141,7 +154,8 @@ const css = img => {
       opacity: 0.25;
       font-size: 18px;
       z-index: 3;
-    }    
+    }
+    
         `
 
   }
